@@ -3,26 +3,26 @@ package org.example;
 import java.util.concurrent.Semaphore;
 
 public class PongTask implements Runnable {
+    private Semaphore pingSemaphore;
+    private Semaphore pongSemaphore;
 
-    private Semaphore ping;
-
-    private Semaphore pong;
-
-    public PongTask(Semaphore ping, Semaphore pong) {
-        this.ping = ping;
-        this.pong = pong;
+    public PongTask(Semaphore pingSemaphore, Semaphore pongSemaphore) {
+        this.pingSemaphore = pingSemaphore;
+        this.pongSemaphore = pongSemaphore;
     }
 
     @Override
     public void run() {
         for (int i = 0; i < 10; i++) {
             try {
-                pong.acquire();
-                System.out.println("Pong");
-                Thread.sleep(10);
-                pong.release();
+                // Aquí pongSemaphore estará en ROJO
+                pongSemaphore.acquire(); // Espera hasta que esté en verde
+                // Aquí pongSemaphore está en ROJO
+                System.out.println("PONG!!!!!!!!!!!!!!!!!");
+                // Aquí el pingSemaphore está en ROJO
+                pingSemaphore.release(); // Pone el pingSempahore en VERDE
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         }
     }
